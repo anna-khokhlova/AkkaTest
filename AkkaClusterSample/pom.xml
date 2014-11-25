@@ -9,6 +9,7 @@
   	<module>AkkaReceiver</module>
     <module>AkkaReceiverApi</module>
   </modules>
+
   <build>
     <plugins>
       <plugin>

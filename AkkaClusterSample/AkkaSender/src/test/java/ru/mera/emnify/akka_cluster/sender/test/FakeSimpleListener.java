@@ -1,4 +1,4 @@
-package ru.mera.emnify.akka_cluster.test; /**
+package ru.mera.emnify.akka_cluster.sender.test; /**
  * Created by vboronin on 25.11.14.
  */
 import akka.actor.UntypedActor;
