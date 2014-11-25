@@ -21,6 +21,7 @@ public class SimpleReporter extends UntypedActor  {
 	protected ArrayList<Address> listeners = new ArrayList<Address>();
 	
 	Cluster cluster = Cluster.get(getContext().system());
+	boolean isJoined = false;
 	
 	@Override
 	 public void preStart() {
@@ -51,7 +52,7 @@ public class SimpleReporter extends UntypedActor  {
 		    log.info("Member is Removed: {}", mRemoved.member());		    		
 		    boolean result = listeners.remove(mRemoved.member().address());
 		    if (result) {
-		    	log.info("Member was found and removed");
+		    	log.info("Receiver was found and removed");
 		    }		    	
 	    } else if (message instanceof MemberEvent) {
 	        // ignore
@@ -63,11 +64,21 @@ public class SimpleReporter extends UntypedActor  {
 	}
 	
 	private void onMemberUp(Member member) {
-	    if (member.hasRole("receiver")) {
-	    	log.info("New receiver is up " + member.address());
-	    	listeners.add(member.address());
-	    	getContext().actorSelection(member.address() + "/user/receiver").tell(new HeartBeatMessage("HELLO", getSelf()), getSelf());
-	    }
+		if (cluster.selfAddress().equals(member.address())) {
+			isJoined = true;
+			log.info("Sender was joined to the cluster. Sending a message HELLO to all receivers.");
+			for (Address a: listeners) {
+				getContext().actorSelection(a + "/user/receiver").tell(new HeartBeatMessage("HELLO", getSelf()), getSelf());
+			}
+		}
+		if (member.hasRole("receiver")) {
+			log.info("New receiver is up " + member.address());
+			listeners.add(member.address());
+			if (isJoined) {
+				log.info("Sending a message HELLO");
+				getContext().actorSelection(member.address() + "/user/receiver").tell(new HeartBeatMessage("HELLO", getSelf()), getSelf());
+			}
+		}
 	  }
 
 }

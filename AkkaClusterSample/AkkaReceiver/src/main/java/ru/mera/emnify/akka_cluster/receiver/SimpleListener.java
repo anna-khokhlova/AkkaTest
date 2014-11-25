@@ -10,8 +10,6 @@ public class SimpleListener extends UntypedActor  {
 	
 	private LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 	
-	Cluster cluster = Cluster.get(getContext().system());
-	
 	public SimpleListener() {		
 	}
 

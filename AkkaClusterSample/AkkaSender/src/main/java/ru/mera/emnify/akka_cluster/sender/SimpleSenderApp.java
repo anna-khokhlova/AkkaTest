@@ -9,7 +9,7 @@ import akka.actor.Props;
 public class SimpleSenderApp {
 	public static void main(String[] args) {
 		if (args.length == 0) {
-		      startup("2552");
+		      startup("0");
 		} else {
 		      startup(args[0]);
 		}
