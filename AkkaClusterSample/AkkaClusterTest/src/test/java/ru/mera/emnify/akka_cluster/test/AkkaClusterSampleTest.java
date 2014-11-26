@@ -19,10 +19,6 @@ import ru.mera.emnify.akka_cluster.sender.SimpleSenderApp;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by vboronin on 24.11.2014.
- */
-
 public class AkkaClusterSampleTest {
     protected static ActorSystem system;
     private LoggingAdapter log;
@@ -34,7 +30,7 @@ public class AkkaClusterSampleTest {
         Config config = ConfigFactory.load("application_test");
         system = ActorSystem.create("ClusterSystem",config);
         SimpleSenderApp.main(new String[] {"2552"});
-        SimpleReceiverApp.main(new String[]{"2560"});
+        SimpleReceiverApp.main(new String[]{});
     }
 
     @Test
