@@ -25,7 +25,6 @@ public class SimpleReporter extends UntypedActor  {
 	protected ArrayList<Address> listeners = new ArrayList<Address>();
 	
 	private Cluster cluster = Cluster.get(getContext().system());
-	boolean isJoined = false;
 	private ActorSystem system = getContext().system();
 	final FiniteDuration timeout = FiniteDuration.create(20, TimeUnit.SECONDS);
 	private Cancellable cancellable = null;
@@ -33,8 +32,9 @@ public class SimpleReporter extends UntypedActor  {
 	
 	@Override
 	 public void preStart() {
-	     cluster.subscribe(getSelf(), ClusterEvent.initialStateAsEvents(), 
-	        MemberEvent.class, UnreachableMember.class);
+	     cluster.subscribe(getSelf(), ClusterEvent.initialStateAsEvents(),
+				 MemberEvent.class, UnreachableMember.class,
+				 ClusterEvent.ReachableMember.class);
 	 }
 	  
 	 @Override
@@ -55,54 +55,62 @@ public class SimpleReporter extends UntypedActor  {
 		} else if (message instanceof UnreachableMember) {
 			UnreachableMember mUnreachable = (UnreachableMember) message;
 			log.info("Member detected as unreachable: {}", mUnreachable.member());
+			if (removeListener(mUnreachable.member())){
+				log.info("Receiver was found and removed");
+			}
 		} else if (message instanceof MemberRemoved) {
 			MemberRemoved mRemoved = (MemberRemoved) message;
 			log.info("Member is Removed: {}", mRemoved.member());
-			boolean result = listeners.remove(mRemoved.member().address());
-			if (result) {
+			if (removeListener(mRemoved.member())) {
 				log.info("Receiver was found and removed");
-				if (listeners.size() == 0 && cancellable != null) {
-					cancellable.cancel();
-				}
 			}
+		} else if (message instanceof ClusterEvent.ReachableMember) {
+			ClusterEvent.ReachableMember mReachable = (ClusterEvent.ReachableMember) message;
+			log.info("Member detected as reachable: {}", mReachable.member());
+			addListener(mReachable.member());
 		} else if (message instanceof MemberEvent) {
-			// ignore
+		    //ignore
 		} else if (message instanceof HeartBeatMessage) {
 			log.info("Received a message: {}", ((HeartBeatMessage) message).getMessage());
-		}else if (message.equals("Do")) {
+		} else if (message.equals("Do")) {
 			log.debug("Got a Do message");
 			for (Address a: listeners) {
 				getContext().actorSelection(a + "/user/receiver").tell(new HeartBeatMessage("HELLO", getSelf()), getSelf());
 			}
-	    }else {
-       	    unhandled(message);
+		}else {
+			unhandled(message);
 	    }
 	}
 	
 	private void onMemberUp(Member member) {
-		if (cluster.selfAddress().equals(member.address())) {
-			isJoined = true;
-			log.info("Sender was joined to the cluster. Sending a message HELLO to all receivers.");
-			for (Address a: listeners) {
-				getContext().actorSelection(a + "/user/receiver").tell(new HeartBeatMessage("HELLO", getSelf()), getSelf());
+		if (member.hasRole("receiver")) {
+			addListener(member);
+			log.info("Sending a message HELLO");
+			getContext().actorSelection(member.address() + "/user/receiver").tell(new HeartBeatMessage("HELLO", getSelf()), getSelf());
+		}
+	}
+
+	private boolean removeListener(Member member) {
+		boolean result = false;
+		if (member.hasRole("receiver") ) {
+			result = listeners.remove(member.address());
+			if (listeners.size() == 0 && cancellable != null &&
+					!cancellable.isCancelled()) {
+				cancellable.cancel();
 			}
-			if (listeners.size() > 0) {
+		}
+		return result;
+	}
+
+	private void addListener(Member member) {
+	    if (member.hasRole("receiver") ) {
+			if (listeners.size() == 0 &&
+					(cancellable == null || cancellable.isCancelled())) {
 				cancellable = system.scheduler().schedule(timeout, timeout, getSelf(), "Do",
 						system.dispatcher(), null);
 			}
-		}
-		if (member.hasRole("receiver")) {
-			log.info("New receiver is up " + member.address());
 			listeners.add(member.address());
-			if (isJoined) {
-				log.info("Sending a message HELLO");
-				getContext().actorSelection(member.address() + "/user/receiver").tell(new HeartBeatMessage("HELLO", getSelf()), getSelf());
-				if (cancellable == null || cancellable.isCancelled()) {
-					cancellable = system.scheduler().schedule(timeout,timeout, getSelf(), "Do",
-							system.dispatcher(), null);
-				}
-			}
 		}
-	  }
+	}
 
 }
