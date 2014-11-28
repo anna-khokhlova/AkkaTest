@@ -10,6 +10,7 @@
 3. A sender is sending HELLO message to each receiver periodically with 20 seconds timeout.
 4. A receiver just replies with OK message to the received HELLO message.
 5. There are also two unit tests and one integration test.
+6. The application logs are written to the AkkaReceiver/log and AkkaSender/log directories.
 ````
 ### Installation and Configuring
 ````
