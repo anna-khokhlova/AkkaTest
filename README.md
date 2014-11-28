@@ -3,7 +3,7 @@
 
 ## Akka test applications
 
-### Description:
+### Description
 ````
 1. Simple AKKA cluster example consisting of a sender application and a receiver application.
 2. This project is a multi-module maven project.
