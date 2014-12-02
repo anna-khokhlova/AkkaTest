@@ -26,7 +26,7 @@ public class SimpleSenderApp {
 	 * to the cluster.
 	 *
 	 * @param  port  a port number which be used by a sender for cluster
-	 *               communication
+	 *               communication.
 	 */
 
     public static void startup(String port) {	    
