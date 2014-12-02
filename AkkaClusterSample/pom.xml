@@ -6,10 +6,10 @@
   <packaging>pom</packaging>
 
   <modules>
-  	<module>AkkaSender</module>
+	<module>AkkaSender</module>
   	<module>AkkaReceiver</module>
-    <module>AkkaReceiverApi</module>
-    <module>AkkaClusterTest</module>
+    	<module>AkkaReceiverApi</module>
+   	<module>AkkaClusterTest</module>
   </modules>
 
   <build>
