@@ -6,6 +6,12 @@ import com.typesafe.config.ConfigFactory;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 
+/*
+ * A sender application main class.
+ * 
+ * @author      Anna Khokhlova
+ */
+
 public class SimpleSenderApp {
 	public static void main(String[] args) {
 		if (args.length == 0) {
