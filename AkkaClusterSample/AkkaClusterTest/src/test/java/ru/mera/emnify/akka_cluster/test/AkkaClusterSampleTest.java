@@ -39,13 +39,13 @@ public class AkkaClusterSampleTest {
         new JavaTestKit(system) {
             {
                 assertTrue("Error: HELLO message is not sent by SimpleReporter",
-                        TestUtils.waitLog("Sending a message HELLO", 2000));
+                        TestUtils.waitLog("Sending a message HELLO", 3000));
 
                 assertTrue("Error: HELLO message is not received by SimpleListener",
-                        TestUtils.waitLog("Received a message: HELLO", 2000));
+                        TestUtils.waitLog("Received a message: HELLO", 3000));
 
                 assertTrue("Error: OK message is not received by SimpleReporter",
-                        TestUtils.waitLog("Received a message: OK", 2000));
+                        TestUtils.waitLog("Received a message: OK", 3000));
 
             }
         };
