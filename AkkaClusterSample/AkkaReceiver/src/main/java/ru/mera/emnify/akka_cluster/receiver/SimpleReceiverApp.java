@@ -5,6 +5,12 @@ import akka.actor.Props;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
+/*
+ * A receiver application main class.
+ * 
+ * @author      Anna Khokhlova
+ */
+
 public class SimpleReceiverApp {
 	public static void main(String[] args) {
         Config config = ConfigFactory.load("application_receiver");
