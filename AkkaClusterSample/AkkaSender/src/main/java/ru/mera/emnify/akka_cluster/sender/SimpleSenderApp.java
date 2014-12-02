@@ -15,6 +15,14 @@ public class SimpleSenderApp {
 		}
     }
 
+	/**
+	 * This method creates an actor system, starts a sender and join it
+	 * to the cluster.
+	 *
+	 * @param  port  a port number which be used by a sender for cluster
+	 *               communication
+	 */
+
     public static void startup(String port) {	    
 	    // Override the configuration of the port
 	    Config config = ConfigFactory.parseString(
