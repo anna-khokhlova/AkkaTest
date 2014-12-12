@@ -1,9 +1,9 @@
 ## AkkaTest
 ========
 
-## Akka test applications
+# Akka test applications
 
-### Description
+## Description
 ````
 1. Simple AKKA cluster example consisting of a sender application and a receiver application.
 2. This project is a multi-module maven project.
@@ -12,7 +12,7 @@
 5. There are also two unit tests and one integration test.
 6. The application logs are written to the AkkaReceiver/log and AkkaSender/log directories.
 ````
-### Installation and Configuring
+## Installation and Configuring
 ````
 The application is build with "mvn clean install" command. 
 The receiver and sender are started with "mvn exec:java" command in the directories 
