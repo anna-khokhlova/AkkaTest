@@ -22,6 +22,8 @@ The receiver and sender ip addresses, seed node address should be configured in 
 AkkaReceiver/src/main/resources/application_receiver.conf and 
 AkkaSender/src/main/resources/application.conf files.
 
+
 -tmp changes were made
+--test step
 
 ````
