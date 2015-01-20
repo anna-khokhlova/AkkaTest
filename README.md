@@ -21,4 +21,7 @@ The seed node (sender) is started with "mvn exec:java -Dexec.args="<port number>
 The receiver and sender ip addresses, seed node address should be configured in the
 AkkaReceiver/src/main/resources/application_receiver.conf and 
 AkkaSender/src/main/resources/application.conf files.
+
+-tmp changes were made
+
 ````
